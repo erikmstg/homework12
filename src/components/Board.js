@@ -10,6 +10,7 @@ const Board = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [boardFull, setBoardFull] = useState(false);
+  const [boardFullMessage, setBoardFullMessage] = useState("");
 
   const TicTacToeProvider = TicTacToeContext.Provider;
 
@@ -24,15 +25,15 @@ const Board = () => {
   useEffect(() => {
     setBoardFull(true);
     for (let i = 0; i < squares.length; i++) {
-      if (squares[i] === null) {
+      if (squares[i] === null && !winners) {
         setBoardFull(false);
-        break;
+        return;
       }
     }
 
     if (boardFull) {
       setIsGameOver(true);
-      setWinners("Permainan berakhir tanpa ada pemenang :(");
+      setBoardFullMessage("Permainan berakhir tanpa ada pemenang :(");
       return;
     }
   }, [squares, boardFull]);
@@ -161,12 +162,12 @@ const Board = () => {
           </div>
         )}
 
-        {isGameOver && winners && (
+        {isGameOver && (
           <div
             className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
             role="alert"
           >
-            <span className="font-semibold">{winners}</span>
+            <span className="font-semibold">{winners || boardFullMessage}</span>
             <div className="font-medium text-center mt-6">
               Main lagi?{" "}
               <span className="cursor-pointer underline" onClick={restart}>
